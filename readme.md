@@ -4,7 +4,7 @@
 
 ### 这东西怎么诞生的
 
-这个东西是怎么来的参考 [这里]([http://code.eggoxygen.top/2020/03/12/LiteEditor-%E5%BC%80%E5%8F%91%E8%AE%B0%E8%BD%BD/](http://code.eggoxygen.top/2020/03/12/LiteEditor-开发记载/))
+这个东西是怎么来的参考 [这里](http://code.eggoxygen.top/2020/03/12/LiteEditor-开发记载/)
 
 ### 这东西简单来说是干啥的
 
