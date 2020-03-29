@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title></title>
+    <script src="../js/vue.js"></script>
+    <script src="../js/element-ui.js"></script>
+    <link rel="stylesheet" href="../css/element-ui.css"/>
+    <script src="../js/axios.min.js"></script>
+    <script src="../js/src-min-noconflict/ace.js"></script>
+    <script src="../js/src-min-noconflict/ext-language_tools.js"></script>
+    <style>
+        .el-header {
+            background-color: #455A64;
+            color: white;
+            text-align: center;
+            line-height: 60px;
+        }
+
+        body {
+            font-family: "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "微软雅黑", Arial, sans-serif;
+
+        }
+    </style>
+</head>
+<body>
+<div id="main">
+    <el-container>
+        <el-header>LiteEditor - UserInstance</el-header>
+        <el-main>
+            <el-card class="box-card">
+                <el-row>
+                    <p></p>
+                    <p>实例辨识符 : <span v-text="insCODE"></span></p>
+                    <textarea id="url" v-text="insURL" hidden></textarea>
+
+                </el-row>
+            </el-card>
+            <br>
+            <el-card class="box-card">
+                <pre id="editor" style="min-height:400px"><textarea class="ace_text-input"  v-text="content"></textarea></pre>
+            </el-card>
+
+        </el-main>
+    </el-container>
+</div>
+</body>
+<script>
+
+    // Default HTML Content
+    var defaultContent = "<!DOCTYPE html>\n" +
+        "<head>\n" +
+        "    <meta charset=\"UTF-8\">\n" +
+        "    <title>Simple HTML</title>\n" +
+        "</head>\n" +
+        "<body>\n" +
+        "    \n" +
+        "</body>\n" +
+        "</html>";
+
+    new Vue({
+        el: '#main',
+        data: {
+            insCODE: GetQueryValue('id'),
+            insURL: "",
+            content: defaultContent,
+        },
+        methods: {},
+        created: function () {
+            var self = this;
+            setInterval(setContent, 200)
+
+            function setContent() {
+                let data = {"code": self.insCODE, "content": editor.getValue()};
+                axios.post('http://106.75.115.138:1901/instance/updateContentByCode/' + self.insCODE, data)
+                    .then(function (response) {
+                        console.log(response.data)
+
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                    });
+            }
+
+            setContent();
+
+        }
+    });
+
+    function GetQueryValue(queryName) {
+        var query = decodeURI(window.location.search.substring(1));
+        var vars = query.split("&");
+        for (var i = 0; i < vars.length; i++) {
+            var pair = vars[i].split("=");
+            if (pair[0] == queryName) {
+                return pair[1];
+            }
+        }
+        return null;
+    }
+
+    // Settings for Ace Editor
+    ace.require("ace/ext/language_tools");
+    var editor = ace.edit("editor");
+    editor.session.setMode("ace/mode/html");
+    editor.setOptions({
+        enableBasicAutocompletion: true,
+        enableSnippets: true,
+        enableLiveAutocompletion: true
+    });
+
+
+</script>
+</html>
+

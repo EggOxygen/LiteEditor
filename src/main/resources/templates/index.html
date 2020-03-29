@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title></title>
+    <script src="js/vue.js"></script>
+    <script src="js/element-ui.js"></script>
+    <link rel="stylesheet" href="css/element-ui.css"/>
+    <style>
+
+        .el-header {
+            background-color: #455A64;
+            color: white;
+            text-align: center;
+            line-height: 60px;
+        }
+
+        body {
+            font-family: "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "微软雅黑", Arial, sans-serif;
+
+        }
+
+    </style>
+</head>
+<body>
+<div id="main">
+    <el-container>
+        <el-header>LiteEditor</el-header>
+        <el-main>
+            <el-card class="box-card">
+                <el-row>
+                    <el-button onclick="newIns()" type="primary">添加实例</el-button>
+                </el-row>
+
+            </el-card>
+            <br>
+            <el-card class="box-card">
+                <p>Made By EggOxygen</p>
+            </el-card>
+        </el-main>
+    </el-container>
+</div>
+</body>
+<script>
+    new Vue({
+        el: '#main'
+    })
+
+    function newIns() {
+        window.location.href = "/instance/newInstance";
+    }
+</script>
+</html>

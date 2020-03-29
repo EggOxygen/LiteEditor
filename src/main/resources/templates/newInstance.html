@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title></title>
+    <script src="../js/vue.js"></script>
+    <script src="../js/element-ui.js"></script>
+    <link rel="stylesheet" href="../css/element-ui.css"/>
+    <script src="../js/axios.min.js"></script>
+    <script src="../js/src-min-noconflict/ace.js"></script>
+    <script src="../js/src-min-noconflict/ext-language_tools.js"></script>
+    <style>
+        .el-header {
+            background-color: #455A64;
+            color: white;
+            text-align: center;
+            line-height: 60px;
+        }
+
+        body {
+            font-family: "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "微软雅黑", Arial, sans-serif;
+
+        }
+    </style>
+</head>
+<body>
+<div id="main">
+    <el-container>
+        <el-header>LiteEditor - NewInstance</el-header>
+        <el-main>
+            <el-card class="box-card">
+                <el-row>
+                    <p>实例ID : <span v-text="insID"></span></p>
+                    <p>实例辨识符 : <span v-text="insCODE"></span></p>
+                </el-row>
+                <el-row>
+                    <el-button type="button" v-on:click="copy()" style="height: max-content">复制实例编辑URL</el-button>
+                    <textarea readonly id="url" v-text="insURL"
+                              style="height: 0px;width: 0px;border: 0px;resize: none"></textarea>
+                </el-row>
+
+            </el-card>
+            <br>
+
+            <el-card class="box-card">
+                <el-row :gutter="20">
+                    <el-col :span="12">
+                        <pre id="editor" style="min-height:400px"><textarea class="ace_text-input"></textarea></pre>
+                    </el-col>
+                    <el-col :span="12">
+                        <p>HTML 内容展示区域</p>
+                        <hr>
+                        <iframe v-bind:srcdoc="content" frameborder="0" scrolling="no" id="external-frame" onload="setIframeHeight(this)"></iframe>
+                    </el-col>
+                </el-row>
+            </el-card>
+
+        </el-main>
+    </el-container>
+</div>
+</body>
+<script>
+    var app = new Vue({
+        el: '#main',
+        data: {
+            insCODE: "",
+            insID: "",
+            insURL: "",
+            content: "",
+        },
+        created: function () {
+            var self = this;
+            setInterval(getContent, 200)
+
+            function getContent() {
+                axios.get('http://106.75.115.138:1901/instance/getContentByCode/' + self.insCODE)
+                    .then(function (response) {
+                        console.log(response.data)
+                        self.content = response.data[0].userContent
+                        editor.setValue(response.data[0].userContent)
+                        editor.clearSelection();
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                    });
+            }
+
+            getContent();
+
+        }
+    });
+
+    axios.get('http://106.75.115.138:1901/instance/createInstance')
+        .then(function (response) {
+            data = response.data;
+            app.insCODE = data.CODE;
+            app.insID = data.ID;
+            app.insURL = 'http://106.75.115.138:1901/instance/userInstance?id=' + app.insCODE
+        })
+        .catch(function (error) {
+            console.log(error);
+        });
+
+
+    function newIns() {
+        window.location.href = "/newIns";
+    }
+
+    function copy() {
+        var doc = document.getElementById('url');
+        doc.select();
+        document.execCommand("Copy");
+        alert("复制成功");
+    }
+
+    // Settings for Ace Editor
+    ace.require("ace/ext/language_tools");
+    var editor = ace.edit("editor");
+    editor.session.setMode("ace/mode/html");
+    editor.setReadOnly(true);
+    editor.setOptions({
+        enableBasicAutocompletion: true,
+        enableSnippets: true,
+        enableLiveAutocompletion: true
+    });
+
+    function setIframeHeight(iframe) {
+        if (iframe) {
+            var iframeWin = iframe.contentWindow || iframe.contentDocument.parentWindow;
+            if (iframeWin.document.body) {
+                iframe.height = iframeWin.document.documentElement.scrollHeight || iframeWin.document.body.scrollHeight;
+            }
+        }
+    };
+
+    window.onload = function () {
+        setIframeHeight(document.getElementById('external-frame'));
+    };
+</script>
+</html>
