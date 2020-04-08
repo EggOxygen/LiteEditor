@@ -1,7 +1,8 @@
 package egg.lab.liteeditor.Controller
 
+import egg.lab.liteeditor.Constant
+import egg.lab.liteeditor.Entity.Instance
 import egg.lab.liteeditor.Entity.User
-import egg.lab.liteeditor.PLACE_VARS
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.*
 
@@ -9,25 +10,19 @@ import org.springframework.web.bind.annotation.*
 @RequestMapping("/instance")
 class contentHandler {
 
-    var user = PLACE_VARS.user
+    var instance = Constant.instance
 
     @ResponseBody
     @CrossOrigin
-    @RequestMapping("getContentByCode/{code}")
-    fun getContentByID(@PathVariable("code") code : String) : Any {
-        var user = user.get(code)
-        var list = mutableListOf<User>()
-        if (user != null) {
-            list.add(0,user)
-        }
-        return list
+    @GetMapping("getContentByID/{id}")
+    fun getContentByID(@PathVariable("id") id : Int) : Any {
+        return instance.get(id)
     }
 
     @ResponseBody
     @CrossOrigin
-    @RequestMapping("updateContentByCode/{code}")
-    fun updateContentByCode(@PathVariable("code") code : String, @RequestBody body: Map<String, String>) : Any {
-        user.update(User(code, body["content"].toString()))
-        return body
+    @PostMapping("updateContentByID")
+    fun updateContentByCode(@RequestBody body: Map<String, String>) : Any {
+        return instance.update(Instance((body["id"] ?: error("")).toInt(), User(body["code"] ?: error(""),body["content"] ?: error(""))))
     }
 }

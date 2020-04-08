@@ -60,24 +60,26 @@
 </div>
 </body>
 <script>
+    // 0408:Egg: 统一获取hostname 而不是在 Handmade 啦 如果是 https 手动改改
+    var full_adress = "http://" + document.location.hostname + ":1901";
+
     var app = new Vue({
         el: '#main',
         data: {
             insCODE: "",
             insID: "",
             insURL: "",
-            content: "",
+            content: ""
         },
         created: function () {
             var self = this;
-            setInterval(getContent, 200)
+            setInterval(getContent, 400)
 
             function getContent() {
-                axios.get('http://106.75.115.138:1901/instance/getContentByCode/' + self.insCODE)
+                axios.get(full_adress + '/instance/getContentByID/' + self.insID)
                     .then(function (response) {
-                        console.log(response.data)
-                        self.content = response.data[0].userContent
-                        editor.setValue(response.data[0].userContent)
+                        self.content = response.data.userContent
+                        editor.setValue(response.data.userContent)
                         editor.clearSelection();
                     })
                     .catch(function (error) {
@@ -90,12 +92,12 @@
         }
     });
 
-    axios.get('http://106.75.115.138:1901/instance/createInstance')
+    axios.get(full_adress + '/instance/createInstance')
         .then(function (response) {
             data = response.data;
             app.insCODE = data.CODE;
             app.insID = data.ID;
-            app.insURL = 'http://106.75.115.138:1901/instance/userInstance?id=' + app.insCODE
+            app.insURL = full_adress + '/instance/userInstance?id=' + app.insID + "&code=" + app.insCODE
         })
         .catch(function (error) {
             console.log(error);

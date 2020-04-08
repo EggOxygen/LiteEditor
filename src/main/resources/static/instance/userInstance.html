@@ -47,44 +47,29 @@
 </body>
 <script>
 
+    // 0408:Egg: 统一获取hostname 而不是在 Handmade 啦 如果是 https 手动改改
+    var full_adress = "http://" + document.location.hostname + ":1901";
+
     // Default HTML Content
     var defaultContent = "<!DOCTYPE html>\n" +
         "<head>\n" +
         "    <meta charset=\"UTF-8\">\n" +
-        "    <title>Simple HTML</title>\n" +
+        "    <title>Exercise Page</title>\n" +
         "</head>\n" +
         "<body>\n" +
         "    \n" +
         "</body>\n" +
         "</html>";
 
-    new Vue({
+    const vm = new Vue({
         el: '#main',
         data: {
-            insCODE: GetQueryValue('id'),
+            insID: GetQueryValue('id'),
+            insCODE: GetQueryValue('code'),
             insURL: "",
             content: defaultContent,
         },
-        methods: {},
-        created: function () {
-            var self = this;
-            setInterval(setContent, 200)
-
-            function setContent() {
-                let data = {"code": self.insCODE, "content": editor.getValue()};
-                axios.post('http://106.75.115.138:1901/instance/updateContentByCode/' + self.insCODE, data)
-                    .then(function (response) {
-                        console.log(response.data)
-
-                    })
-                    .catch(function (error) {
-                        console.log(error);
-                    });
-            }
-
-            setContent();
-
-        }
+        methods: {}
     });
 
     function GetQueryValue(queryName) {
@@ -103,11 +88,23 @@
     ace.require("ace/ext/language_tools");
     var editor = ace.edit("editor");
     editor.session.setMode("ace/mode/html");
+    // On update when changed
+    editor.session.on('change', () => {
+        let data = {"id": vm.insID, "code": vm.insCODE, "content": editor.getValue()};
+        axios.post(full_adress + '/instance/updateContentByID', data)
+            .then(function (response) {
+                // Nothing to do
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
+    })
     editor.setOptions({
         enableBasicAutocompletion: true,
         enableSnippets: true,
         enableLiveAutocompletion: true
     });
+
 
 
 </script>
