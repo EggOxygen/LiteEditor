@@ -14,7 +14,7 @@ class CustomWebSecurity : WebSecurityConfigurerAdapter() {
     override fun configure(auth: AuthenticationManagerBuilder?) {
         if (auth != null) {
             auth.inMemoryAuthentication().passwordEncoder(NonePasswordEcoder())
-                    .withUser("0321").password(NonePasswordEcoder().encode("0321")).roles("TEACHER")
+                    .withUser("0410").password(NonePasswordEcoder().encode("0410")).roles("TEACHER")
 
         }
     }
@@ -25,6 +25,7 @@ class CustomWebSecurity : WebSecurityConfigurerAdapter() {
                     .antMatchers("/").hasRole("TEACHER")
                     .antMatchers("index").hasRole("TEACHER")
                     .antMatchers("/instance/newInstance").hasRole("TEACHER")
+                    .antMatchers("/FileManager/*").hasRole("TEACHER")
                     .anyRequest().permitAll() // TEACHER permit
                     .and()
                     .formLogin().permitAll()
@@ -32,6 +33,7 @@ class CustomWebSecurity : WebSecurityConfigurerAdapter() {
                     .logout().permitAll() // Logout Permit
                     .and()
                     .csrf().disable() // Disable CSRF
+                    .headers().frameOptions().sameOrigin()
 
         }
 

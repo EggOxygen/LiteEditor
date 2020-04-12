@@ -34,6 +34,7 @@
                     <p>实例辨识符 : <span v-text="insCODE"></span></p>
                 </el-row>
                 <el-row>
+                    <el-button type="button" v-on:click="files()" style="height: max-content">文件管理</el-button>
                     <el-button type="button" v-on:click="copy()" style="height: max-content">复制实例编辑URL</el-button>
                     <textarea readonly id="url" v-text="insURL"
                               style="height: 0px;width: 0px;border: 0px;resize: none"></textarea>
@@ -104,8 +105,8 @@
         });
 
 
-    function newIns() {
-        window.location.href = "/newIns";
+    function files() {
+        window.open("../FileManager/index");
     }
 
     function copy() {

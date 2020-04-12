@@ -30,6 +30,8 @@ thymeleaf + spring boot + Vuejs + 杂乱的思维 **(编写时候由于习惯内
 
 ### 版本更新日志
 
+* 0.2.2-SNAPSHOT
+  * 新增一个版本的文件管理
 * 0.2.0-SNAPSHOT
   * 移除了部分无用部分
   * 输入页使用监听而不再是暴力POST

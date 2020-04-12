@@ -7,6 +7,7 @@ import org.apache.logging.log4j.util.Base64Util
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.*
+import javax.servlet.http.HttpServletResponse
 import kotlin.random.Random
 
 @Controller
@@ -29,7 +30,7 @@ class instanceHandler {
     }
 
     @RequestMapping("newInstance")
-    fun newIns() : Any{
+    fun newIns(response : HttpServletResponse) : Any{
         return "newInstance"
     }
 
