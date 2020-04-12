@@ -51,7 +51,8 @@
                     <el-col :span="12">
                         <p>HTML 内容展示区域</p>
                         <hr>
-                        <iframe v-bind:srcdoc="content" frameborder="0" scrolling="no" id="external-frame" onload="setIframeHeight(this)"></iframe>
+                        <iframe frameborder="0" scrolling="no" id="external-frame"
+                                onload="setIframeHeight(this)"></iframe>
                     </el-col>
                 </el-row>
             </el-card>
@@ -79,9 +80,15 @@
             function getContent() {
                 axios.get(full_adress + '/instance/getContentByID/' + self.insID)
                     .then(function (response) {
-                        self.content = response.data.userContent
-                        editor.setValue(response.data.userContent)
-                        editor.clearSelection();
+                        if (self.content != response.data.userContent) {
+                            self.content = response.data.userContent;
+                            editor.setValue(response.data.userContent);
+                            editor.clearSelection();
+                            updateHTMLOutput(self.content);
+                            console.log('CONTENT UPDATE')
+                        } else {
+                            console.log('NO UPDATE')
+                        }
                     })
                     .catch(function (error) {
                         console.log(error);
@@ -124,7 +131,8 @@
     editor.setOptions({
         enableBasicAutocompletion: true,
         enableSnippets: true,
-        enableLiveAutocompletion: true
+        enableLiveAutocompletion: true,
+        maxLines: Infinity
     });
 
     function setIframeHeight(iframe) {
@@ -135,6 +143,16 @@
             }
         }
     };
+
+    function updateHTMLOutput(content) {
+
+        var ifr = document.getElementById('external-frame');
+        var ifrw = (ifr.contentWindow) ? ifr.contentWindow : (ifr.contentDocument.document) ? ifr.contentDocument.document : ifr.contentDocument;
+        ifrw.document.open();
+        ifrw.document.write(content);
+        ifrw.document.close();
+
+    }
 
     window.onload = function () {
         setIframeHeight(document.getElementById('external-frame'));

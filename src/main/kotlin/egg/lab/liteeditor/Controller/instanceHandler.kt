@@ -4,6 +4,7 @@ import egg.lab.liteeditor.Entity.Instance
 import egg.lab.liteeditor.Constant
 import egg.lab.liteeditor.Entity.User
 import org.apache.logging.log4j.util.Base64Util
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.*
@@ -30,7 +31,7 @@ class instanceHandler {
     }
 
     @RequestMapping("newInstance")
-    fun newIns(response : HttpServletResponse) : Any{
+    fun newIns() : Any{
         return "newInstance"
     }
 

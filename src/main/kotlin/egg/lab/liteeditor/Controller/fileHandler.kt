@@ -65,7 +65,7 @@ class fileHandler {
     fun files():Any{
         var list = mutableListOf<MutableMap<String,String>>()
 
-        val filesName = File(filePath).listFiles().forEach {
+        File(filePath).listFiles().forEach {
             val map = mutableMapOf<String,String>()
             map.put("fileName",it.name)
             map.put("fileURL","${apacheURL}/${it.name}")

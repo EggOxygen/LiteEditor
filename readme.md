@@ -30,6 +30,10 @@ thymeleaf + spring boot + Vuejs + 杂乱的思维 **(编写时候由于习惯内
 
 ### 版本更新日志
 
+* 0.2.3-SNAPSHOT
+  * 修复HTML标签读取跳转问题
+  * 动态从配置读取版本号
+  * 修改编辑器默认最大行限制
 * 0.2.2-SNAPSHOT
   * 新增一个版本的文件管理
 * 0.2.0-SNAPSHOT
