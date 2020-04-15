@@ -28,8 +28,30 @@ thymeleaf + spring boot + Vuejs + 杂乱的思维 **(编写时候由于习惯内
 
 ---
 
+### 配置相关
+
+需要在 application.properties 内手动进行相关配置
+
+```bash
+
+# LiteEditor Config
+# 填入存放文件的真实路径
+editor.upload-path=
+# 填入真实路径对应的URL
+editor.apache-url=
+
+# Redis Config
+spring.redis.port=6379
+
+```
+
+---
+
 ### 版本更新日志
 
+* 0.2.6-SNAPSHOT
+  * 用 Redis 作为数据缓存
+  * 完善代码
 * 0.2.3-SNAPSHOT
   * 修复HTML标签读取跳转问题
   * 动态从配置读取版本号

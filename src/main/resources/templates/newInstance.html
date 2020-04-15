@@ -36,6 +36,7 @@
                 <el-row>
                     <p>实例ID : <span v-text="insID"></span></p>
                     <p>实例辨识符 : <span v-text="insCODE"></span></p>
+<!--                    <p>实例状态 : <span v-text="insSTATUS"></span></p>-->
                 </el-row>
                 <el-row>
                     <el-button type="button" v-on:click="files()" style="height: max-content">文件管理</el-button>
@@ -75,6 +76,7 @@
             insCODE: "",
             insID: "",
             insURL: "",
+            insSTATUS: "",
             content: ""
         },
         created: function () {
@@ -146,16 +148,14 @@
                 iframe.height = iframeWin.document.documentElement.scrollHeight || iframeWin.document.body.scrollHeight;
             }
         }
-    };
+    }
 
     function updateHTMLOutput(content) {
-
         var ifr = document.getElementById('external-frame');
         var ifrw = (ifr.contentWindow) ? ifr.contentWindow : (ifr.contentDocument.document) ? ifr.contentDocument.document : ifr.contentDocument;
         ifrw.document.open();
         ifrw.document.write(content);
         ifrw.document.close();
-
     }
 
     window.onload = function () {

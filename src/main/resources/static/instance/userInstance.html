@@ -90,7 +90,7 @@
     editor.session.setMode("ace/mode/html");
     // On update when changed
     editor.session.on('change', () => {
-        let data = {"id": vm.insID, "code": vm.insCODE, "content": editor.getValue()};
+        let data = {"id": vm.insID, "code": vm.insCODE, "status": "ONLINE", "content": editor.getValue()};
         axios.post(full_adress + '/instance/updateContentByID', data)
             .then(function (response) {
                 // Nothing to do
