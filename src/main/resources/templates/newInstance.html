@@ -21,6 +21,10 @@
             font-family: "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "微软雅黑", Arial, sans-serif;
 
         }
+
+        #external-frame {
+            width: -webkit-fill-available;
+        }
     </style>
 </head>
 <body>
@@ -51,7 +55,7 @@
                     <el-col :span="12">
                         <p>HTML 内容展示区域</p>
                         <hr>
-                        <iframe frameborder="0" scrolling="no" id="external-frame"
+                        <iframe frameborder="0" scrolling="no" id="external-frame" width="100%"
                                 onload="setIframeHeight(this)"></iframe>
                     </el-col>
                 </el-row>
