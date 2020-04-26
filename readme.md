@@ -30,15 +30,17 @@ thymeleaf + spring boot + Vuejs + 杂乱的思维 **(编写时候由于习惯内
 
 ### 配置相关
 
+现在不需要单独的Apache服务器了 全部交给本地去处理
+
+相关的逻辑参考 `fileHandler` 与本地 `static` 文件夹关联
+
 需要在 application.properties 内手动进行相关配置
 
 ```bash
 
 # LiteEditor Config
-# 填入存放文件的真实路径
-editor.upload-path=
-# 填入真实路径对应的URL
-editor.apache-url=
+# 填入存放文件本地绝对路径
+editor.upload-path=path_to_your_static_location
 
 # Redis Config
 spring.redis.port=6379
@@ -49,6 +51,9 @@ spring.redis.port=6379
 
 ### 版本更新日志
 
+* 0.2.7-SNAPSHOT
+  * 使用本地路径作为文件存储
+  * Redis 里面使用 Hash 作为储存
 * 0.2.6-SNAPSHOT
   * 用 Redis 作为数据缓存
   * 完善代码

@@ -1,10 +1,12 @@
 package egg.lab.liteeditor.Utils
 
+import egg.lab.liteeditor.Entity.User
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.data.redis.core.RedisTemplate
 import org.springframework.stereotype.Component
-import java.util.concurrent.TimeUnit
+import java.text.SimpleDateFormat
+import java.util.*
 
 @Component
 class RedisUtils {
@@ -16,32 +18,21 @@ class RedisUtils {
 
 
     /*
-    * Date: 2020/4/13
+    * Date: 2020/4/24
     * Author: EggOxygen
-    * Desc: 用于创建一个实例
+    * Desc: 用于创建或者更新一个实例 Hash
     */
-    fun set(key: String, value: Any) {
-        redisTemplate.opsForValue().set(key, value)
-        // Egg:20200414: 默认六小时过期
-        redisTemplate.expire(key, 6L, TimeUnit.HOURS)
-    }
-
-    /*
-    * Date: 2020/4/15
-    * Author: EggOxygen
-    * Desc: 更新一个实例
-    */
-    fun update(key: String, value: Any) {
-        redisTemplate.opsForValue().set(key, value)
+    fun setOrUpdate(key: String, value: User) {
+        redisTemplate.opsForHash<String, User>().put("EDITOR", key, value)
     }
 
     /*
     * Date: 2020/4/14
     * Author: EggOxygen
-    * Desc: 用于获取一个实例
+    * Desc: 用于获取一个实例 Hash
     */
     fun get(key: String): Any? {
-        return redisTemplate.opsForValue().get(key)
+        return redisTemplate.opsForHash<String, User>().get("EDITOR", key)
     }
 
 

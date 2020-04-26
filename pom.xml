@@ -10,7 +10,7 @@
     </parent>
     <groupId>egg.lab</groupId>
     <artifactId>liteeditor</artifactId>
-    <version>0.2.6-SNAPSHOT</version>
+    <version>0.2.7-SNAPSHOT</version>
     <name>liteEditor</name>
     <description>A Online Editor For Lite Work</description>
 

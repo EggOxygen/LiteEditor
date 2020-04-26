@@ -36,7 +36,7 @@ class InstanceHandler {
         list["ID"] = id.toString()
         list["CODE"] = code
         list["STATUS"] = "离线状态"
-        redisUtils.set(id.toString(), User(code))
+        redisUtils.setOrUpdate(id.toString(), User(code))
         return list
     }
 
