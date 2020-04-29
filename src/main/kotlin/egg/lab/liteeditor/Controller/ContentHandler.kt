@@ -34,6 +34,6 @@ class ContentHandler {
     * Desc: 更新内容
     */
     fun updateContentByCode(@RequestBody body: Map<String, String>) : Any {
-        return redisUtils.update(body["id"].toString(), User(body["code"] ?: error(""),body["status"],body["content"]))
+        return redisUtils.setOrUpdate(body["id"].toString(), User(body["code"] ?: error(""),body["status"],body["content"]))
     }
 }
