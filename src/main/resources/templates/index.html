@@ -29,9 +29,10 @@
         <el-main>
             <el-card class="box-card">
                 <el-row>
-                    <el-button onclick="newIns()" type="primary">添加实例</el-button>
+                    <el-button onclick="newIns(1)" type="primary">添加实例 [单人演示]</el-button>
+                    <el-button onclick="newIns(2)" type="primary">添加实例 [两人演示]</el-button>
+                    <el-button onclick="newIns(4)" type="primary">添加实例 [四人演示]</el-button>
                 </el-row>
-
             </el-card>
             <br>
             <el-card class="box-card">
@@ -50,8 +51,9 @@
         el: '#main'
     })
 
-    function newIns() {
-        window.location.href = "/instance/newInstance";
+    function newIns(Num) {
+        window.location.href = "/instance/newInstance" + "?Num=" + Num
+
     }
 </script>
 </html>

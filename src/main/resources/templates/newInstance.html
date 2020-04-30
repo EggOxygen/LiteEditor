@@ -7,6 +7,7 @@
     <script src="../js/element-ui.js"></script>
     <link rel="stylesheet" href="../css/element-ui.css"/>
     <script src="../js/axios.min.js"></script>
+    <script src="../js/utils.js"></script>
     <script src="../js/src-min-noconflict/ace.js"></script>
     <script src="../js/src-min-noconflict/ext-language_tools.js"></script>
     <style>
@@ -33,34 +34,61 @@
         <el-header>LiteEditor - NewInstance</el-header>
         <el-main>
             <el-card class="box-card">
-                <el-row>
-                    <p>实例ID : <span v-text="insID"></span></p>
-                    <p>实例辨识符 : <span v-text="insCODE"></span></p>
-<!--                    <p>实例状态 : <span v-text="insSTATUS"></span></p>-->
-                </el-row>
-                <el-row>
-                    <el-button type="button" v-on:click="files()" style="height: max-content">文件管理</el-button>
-                    <el-button type="button" v-on:click="copy()" style="height: max-content">复制实例编辑URL</el-button>
-                    <textarea readonly id="url" v-text="insURL"
-                              style="height: 0px;width: 0px;border: 0px;resize: none"></textarea>
-                </el-row>
+
+                <el-table
+                        :data="MulData"
+                        border
+                        style="width: 100%">
+                    <el-table-column
+                            fixed
+                            prop="insID"
+                            label="实例ID "
+                    >
+                    </el-table-column>
+                    <el-table-column
+                            prop="insCODE"
+                            label="实例辨识符"
+                    >
+                    </el-table-column>
+                    <el-table-column
+                            label="操作"
+                            width="300px"
+                    >
+                        <template slot-scope="scope">
+                            <el-row>
+                                <el-button type="button" v-on:click="files()" style="height: max-content">文件管理
+                                </el-button>
+                                <el-button @click="copy('url'+ scope.row.insID)">复制编辑URL</el-button>
+                                <textarea readonly :id="'url'+ scope.row.insID" v-text="scope.row.insURL"
+                                          style="height: 0px;width: 0px;border: 0px;resize: none"></textarea>
+                            </el-row>
+                        </template>
+                    </el-table-column>
+                </el-table>
 
             </el-card>
             <br>
 
-            <el-card class="box-card">
-                <el-row :gutter="20">
-                    <el-col :span="12">
-                        <pre id="editor" style="min-height:400px"><textarea class="ace_text-input"></textarea></pre>
-                    </el-col>
-                    <el-col :span="12">
-                        <p>HTML 内容展示区域</p>
-                        <hr>
-                        <iframe frameborder="0" scrolling="no" id="external-frame" width="100%"
-                                onload="setIframeHeight(this)"></iframe>
-                    </el-col>
-                </el-row>
-            </el-card>
+            <div v-for="sinData in MulData">
+                <el-card class="box-card">
+                    <el-row :gutter="20">
+                        <p style="padding-left: 10px">实例辨识符 : <span v-text="sinData.insCODE"></span></p>
+                    </el-row>
+                    <el-row :gutter="20">
+                        <el-col :span="12">
+                                        <pre :id="'editor-' + sinData.insID" style="min-height:400px"><textarea
+                                                class="ace_text-input"></textarea></pre>
+                        </el-col>
+                        <el-col :span="12">
+                            <p>HTML 内容展示区域</p>
+                            <hr>
+                            <iframe frameborder="0" scrolling="no" :id="'frame-' + sinData.insID" width="100%"
+                                    onload="setIframeHeight(this)"></iframe>
+                        </el-col>
+                    </el-row>
+                </el-card>
+                <br>
+            </div>
 
         </el-main>
     </el-container>
@@ -68,98 +96,103 @@
 </body>
 <script>
     // 0408:Egg: 统一获取hostname 而不是在 Handmade 啦 如果是 https 手动改改
-    var full_adress = "http://" + document.location.hostname + ":1901";
+    var fullAddress = "http://" + document.location.hostname + ":1901"
+
+
+    async function createIns() {
+        let num = GetQueryValue('Num')
+        for (let i = 0; i < num; i++) {
+            axios.get(fullAddress + '/instance/createInstance')
+                .then(function (response) {
+                    data = response.data
+                    app.MulData.push({
+                        'insCODE': data.CODE,
+                        'insID': data.ID,
+                        'insURL': fullAddress + '/instance/userInstance?id=' + data.ID + "&code=" + data.CODE,
+                        'content': ""
+                    })
+                })
+                .catch(function (error) {
+                    console.log(error)
+                })
+        }
+    }
 
     var app = new Vue({
         el: '#main',
-        data: {
-            insCODE: "",
-            insID: "",
-            insURL: "",
-            insSTATUS: "",
-            content: ""
+        data() {
+            return {
+                MulData: []
+            }
         },
         created: function () {
-            var self = this;
-            setInterval(getContent, 400)
 
-            function getContent() {
-                axios.get(full_adress + '/instance/getContentByID/' + self.insID)
-                    .then(function (response) {
-                        if (self.content != response.data.userContent) {
-                            self.content = response.data.userContent;
-                            editor.setValue(response.data.userContent);
-                            editor.clearSelection();
-                            updateHTMLOutput(self.content);
-                            console.log('CONTENT UPDATE')
-                        } else {
-                            console.log('NO UPDATE')
-                        }
-                    })
-                    .catch(function (error) {
-                        console.log(error);
-                    });
-            }
+            createIns()
 
-            getContent();
+            setInterval(() => {
+
+                for (let i = 0; i < app.MulData.length; i++) {
+                    axios.get(fullAddress + '/instance/getContentByID/' + app.MulData[i].insID)
+                        .then(function (response) {
+                            if (app.MulData[i].content !== response.data.userContent) {
+                                app.MulData[i].content = response.data.userContent
+                                getEditor("editor-" + app.MulData[i].insID).setValue(response.data.userContent)
+                                getEditor("editor-" + app.MulData[i].insID).clearSelection()
+                                updateHTMLOutput(app.MulData[i].content, 'frame-' + app.MulData[i].insID)
+                                console.log('CONTENT UPDATE')
+                            } else {
+                                console.log('NO UPDATE')
+                            }
+                        })
+                        .catch(function (error) {
+                            // console.log(error)
+                            setEditor("editor-" + app.MulData[i].insID)
+                        })
+                }
+
+            }, 400)
+
 
         }
-    });
-
-    axios.get(full_adress + '/instance/createInstance')
-        .then(function (response) {
-            data = response.data;
-            app.insCODE = data.CODE;
-            app.insID = data.ID;
-            app.insURL = full_adress + '/instance/userInstance?id=' + app.insID + "&code=" + app.insCODE
-        })
-        .catch(function (error) {
-            console.log(error);
-        });
-
+    })
 
     function files() {
-        window.open("../FileManager/index");
+        window.open("../FileManager/index")
     }
 
-    function copy() {
-        var doc = document.getElementById('url');
-        doc.select();
-        document.execCommand("Copy");
-        alert("复制成功");
+    function copy(id) {
+        var doc = document.getElementById(id)
+        doc.select()
+        document.execCommand("Copy")
+        alert("复制成功")
     }
 
-    // Settings for Ace Editor
-    ace.require("ace/ext/language_tools");
-    var editor = ace.edit("editor");
-    editor.session.setMode("ace/mode/html");
-    editor.setReadOnly(true);
-    editor.setOptions({
-        enableBasicAutocompletion: true,
-        enableSnippets: true,
-        enableLiveAutocompletion: true,
-        maxLines: Infinity
-    });
-
-    function setIframeHeight(iframe) {
-        if (iframe) {
-            var iframeWin = iframe.contentWindow || iframe.contentDocument.parentWindow;
-            if (iframeWin.document.body) {
-                iframe.height = iframeWin.document.documentElement.scrollHeight || iframeWin.document.body.scrollHeight;
-            }
-        }
+    function setEditor(id) {
+        // Settings for Ace Editor
+        ace.require("ace/ext/language_tools")
+        const editor = ace.edit(id);
+        editor.session.setMode("ace/mode/html")
+        editor.setReadOnly(true)
+        editor.setOptions({
+            enableBasicAutocompletion: true,
+            enableSnippets: true,
+            enableLiveAutocompletion: true,
+            maxLines: Infinity
+        })
     }
 
-    function updateHTMLOutput(content) {
-        var ifr = document.getElementById('external-frame');
-        var ifrw = (ifr.contentWindow) ? ifr.contentWindow : (ifr.contentDocument.document) ? ifr.contentDocument.document : ifr.contentDocument;
-        ifrw.document.open();
-        ifrw.document.write(content);
-        ifrw.document.close();
+    function getEditor(id) {
+        return ace.edit(id);
     }
 
-    window.onload = function () {
-        setIframeHeight(document.getElementById('external-frame'));
-    };
+    function updateHTMLOutput(content, id) {
+        var ifr = document.getElementById(id)
+        var ifrw = (ifr.contentWindow) ? ifr.contentWindow : (ifr.contentDocument.document) ? ifr.contentDocument.document : ifr.contentDocument
+        ifrw.document.open()
+        ifrw.document.write(content)
+        ifrw.document.close()
+    }
+
+
 </script>
 </html>

@@ -72,7 +72,7 @@
 
 <script>
     // 0408:Egg: 统一获取hostname 而不是在 Handmade 啦 如果是 https 手动改改
-    var full_adress = "http://" + document.location.hostname + ":1901";
+    var fullAddress = "http://" + document.location.hostname + ":1901"
 
     var vue = new Vue({
         el: '#file',
@@ -87,15 +87,15 @@
         methods: {
             getFiles() {
                 const _this = this
-                axios.get(full_adress+'/FileManager/FilesList').then(function (resp) {
+                axios.get(fullAddress + '/FileManager/FilesList').then(function (resp) {
                     _this.allFiles = resp.data
                 })
             },
-            upload(){
+            upload() {
 
             },
-            refresh(response, file, fileList){
-                window.location.reload();
+            refresh(response, file, fileList) {
+                window.location.reload()
             }
         }
 
