@@ -16,8 +16,10 @@
 
 ### 这东西用到了啥东西来做
 
-Client = Vue-Cli + ClipboardJS + element-ui + axios
-Server = Nodejs + Express + Redis + uuid
+Client = Vue-Cli + ClipboardJS + element-ui + axios   
+   
+Server = Nodejs + Express + Redis + uuid   
+   
 
 ### 关于FE分支
 
@@ -31,10 +33,10 @@ Server = Nodejs + Express + Redis + uuid
 
 ### 配置相关
 
-editor_client 为网页前端的文件 为 vue-cli 项目 可以直接跑起来
-
-editor_server 为Nodejs后端的文件 为 Express 项目 可以直接跑起来
-
+editor_client 为网页前端的文件 为 vue-cli 项目 可以直接跑起来   
+   
+editor_server 为Nodejs后端的文件 为 Express 项目 可以直接跑起来   
+   
 
 ```javascript
 
