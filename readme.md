@@ -1,4 +1,4 @@
-# LiteEditor
+# LiteEditor FE
 
 > ~~孩子上网课老怕跑走？快用LiteEditor来实时监控孩子的学习情况。~~
 
@@ -16,38 +16,33 @@
 
 ### 这东西用到了啥东西来做
 
-thymeleaf + spring boot + Vuejs + 杂乱的思维 **(编写时候由于习惯内部用的是Kotlin而非Java)**
+Client = Vue-Cli + ClipboardJS + element-ui + axios
+Server = Nodejs + Express + Redis + uuid
 
-### 如何使用它来帮助老师学习
+### 关于FE分支
 
-如果你也是计算机方面专业的 如果你也有HTML相关的课程 并且你有一台可以跑的服务器
+这个分支用的基本为前端的技术 替换 SpringBoot 版本 
 
-那么你就可以 clone 下来 改改端口 然后直接生成后跑起来 不需要额外的配置
+对比 SpringBoot 上面除了少了一个文件管理相关 其他保持一致
 
-### 有BUG咋办
-
-这个说实话写的比较乱 不涉及任何数据库交互逻辑 部分逻辑现在看来是比较绕的 后期看看有没有良心做个更新啥的吧
-
-真遇到问题了可以提出来 做个更新就好了的事情
+非前端开发者 所以后端的部分按照自己的习惯来写的
 
 ---
 
 ### 配置相关
 
-现在不需要单独的Apache服务器了 全部交给本地去处理
+editor_client 为网页前端的文件 为 vue-cli 项目 可以直接跑起来
 
-相关的逻辑参考 `fileHandler` 与本地 `static` 文件夹关联
+editor_server 为Nodejs后端的文件 为 Express 项目 可以直接跑起来
 
-需要在 application.properties 内手动进行相关配置
 
-```bash
+```javascript
 
-# LiteEditor Config
-# 填入存放文件本地绝对路径
-editor.upload-path=path_to_your_static_location
-
-# Redis Config
-spring.redis.port=6379
+/* editor_server 内部的 redis_utils 需要填入自己的 Redis 配置 */
+const client = redis.createClient({
+    host: '',
+    password: ''
+});
 
 ```
 
@@ -55,6 +50,8 @@ spring.redis.port=6379
 
 ### 版本更新日志
 
+* 0.4.0-FE
+  * 替换为前端技术栈
 * 0.3.0-SNAPSHOT
   * 支持多人线上 默认提供单人双人四人
   * 优化编辑者体验 现在可以看到HTML输出预览
